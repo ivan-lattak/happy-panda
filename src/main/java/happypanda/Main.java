@@ -1,4 +1,4 @@
-package sample;
+package happypanda;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +10,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Main.class.getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
+        Parent root = FXMLLoader.load(Main.class.getResource("happy-panda.fxml"));
+        primaryStage.setTitle("Happy Panda");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
     }
