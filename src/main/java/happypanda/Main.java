@@ -12,11 +12,13 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Main.class.getResource("happy-panda.fxml"));
         primaryStage.setTitle("Happy Panda");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 640, 480));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }
