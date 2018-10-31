@@ -1,5 +1,6 @@
 package happypanda;
 
+import happypanda.controllers.HappyPandaController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,9 +11,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Main.class.getResource("happy-panda.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("happy-panda.fxml"));
+        Parent root = loader.load();
+        HappyPandaController controller = loader.getController();
+        controller.setStage(primaryStage);
         primaryStage.setTitle("Happy Panda");
-        primaryStage.setScene(new Scene(root, 640, 480));
+        primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
