@@ -12,10 +12,12 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-@SuppressWarnings("NullableProblems")
+// @SuppressWarnings("NullableProblems")
 public class HappyPandaController {
 
     private Stage stage;
@@ -40,7 +42,11 @@ public class HappyPandaController {
     private Task runningTask;
 
     public void handleDownload() {
+        if (!validateInput()) {
+            return;
+        }
         disableControls();
+
         runningTask = new GalleryDownloadTask(galleryUrlField.getText(),
                 ipbMemberIdField.getText(),
                 ipbPassHashField.getText(),
@@ -58,6 +64,7 @@ public class HappyPandaController {
 
     public void handleCancel() {
         runningTask.cancel();
+        runningTask = null;
     }
 
     public void handleBrowse() {
@@ -69,6 +76,38 @@ public class HappyPandaController {
     }
 
     private void handleException(Throwable e) {
+
+    }
+
+    private boolean validateInput() {
+        return validateGalleryUrlField() &&
+                validateIpbMemberIdField() &&
+                validateIpbPassHashField() &&
+                validateOutputFolderField();
+    }
+
+    private boolean validateGalleryUrlField() {
+        try {
+            new URI(galleryUrlField.getText());
+        } catch (URISyntaxException e) {
+            // TODO: 01-Nov-18
+        }
+        return false;
+    }
+
+    private boolean validateIpbMemberIdField() {
+        return false;
+    }
+
+    private boolean validateIpbPassHashField() {
+        return false;
+    }
+
+    private boolean validateOutputFolderField() {
+        return false;
+    }
+
+    private void displayError(String message) {
 
     }
 
