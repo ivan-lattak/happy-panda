@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    public static final int ROOT_H_PADDING = 20;
+    public static final int ROOT_V_PADDING = 40;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("happy-panda.fxml"));
@@ -17,7 +20,8 @@ public class Main extends Application {
         controller.setStage(primaryStage);
         primaryStage.setTitle("Happy Panda");
         primaryStage.setScene(new Scene(root));
-        primaryStage.setResizable(false);
+        primaryStage.setMinWidth(root.minWidth(-1) + ROOT_H_PADDING);
+        primaryStage.setMinHeight(root.minHeight(-1) + ROOT_V_PADDING);
         primaryStage.show();
     }
 

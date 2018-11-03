@@ -2,11 +2,11 @@ package happypanda.controllers;
 
 import happypanda.services.GalleryDownloadTask;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 // @SuppressWarnings("NullableProblems")
 public class HappyPandaController {
@@ -39,7 +45,11 @@ public class HappyPandaController {
     @FXML @NotNull
     private Button browseButton;
 
-    private Task runningTask;
+    @FXML @NotNull
+    private Text errorMessage;
+    private Task<Void> errorMessageHider;
+
+    private Task<Void> runningTask;
 
     public void handleDownload() {
         if (!validateInput()) {
@@ -55,7 +65,7 @@ public class HappyPandaController {
         runningTask.setOnSucceeded(event -> enableControls());
         runningTask.setOnFailed(event -> {
             enableControls();
-            handleException(((WorkerStateEvent) event).getSource().getException());
+            handleException(event.getSource().getException());
         });
         runningTask.setOnCancelled(event -> enableControls());
 
@@ -90,25 +100,71 @@ public class HappyPandaController {
         try {
             new URI(galleryUrlField.getText());
         } catch (URISyntaxException e) {
-            // TODO: 01-Nov-18
+            displayError("Invalid gallery URL!", Duration.of(5, SECONDS));
+            return false;
         }
-        return false;
+        return true;
     }
 
     private boolean validateIpbMemberIdField() {
-        return false;
+        if (ipbMemberIdField.getText().isEmpty()) {
+            displayError("Please fill the ipb_member_id cookie field.", Duration.of(5, SECONDS));
+            return false;
+        }
+        return true;
     }
 
     private boolean validateIpbPassHashField() {
-        return false;
+        if (ipbPassHashField.getText().isEmpty()) {
+            displayError("Please fill the ipb_pass_hash cookie field.", Duration.of(5, SECONDS));
+            return false;
+        }
+        return true;
     }
 
     private boolean validateOutputFolderField() {
-        return false;
+        Path outputFolder;
+        try {
+            outputFolder = Paths.get(outputFolderField.getText());
+        } catch (InvalidPathException e) {
+            displayError("Invalid output folder path!", Duration.of(5, SECONDS));
+            return false;
+        }
+
+        if (!Files.exists(outputFolder)) {
+            displayError("The output folder does not exist!", Duration.of(5, SECONDS));
+            return false;
+        }
+
+        if (!Files.isDirectory(outputFolder)) {
+            displayError("The provided \"output folder\" is not a folder", Duration.of(5, SECONDS));
+            return false;
+        }
+        return true;
     }
 
-    private void displayError(String message) {
+    private void displayError(String message, Duration sleepDuration) {
+        errorMessage.setText(message);
+        errorMessage.setVisible(true);
 
+        if (errorMessageHider != null) {
+            errorMessageHider.cancel();
+        }
+        errorMessageHider = new Task<Void>() {
+            @Override
+            protected Void call() {
+                try {
+                    Thread.sleep(sleepDuration.toMillis());
+                } catch (InterruptedException ignored) {
+                }
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                errorMessage.setVisible(false);
+            }
+        };
+        new Thread(errorMessageHider).start();
     }
 
     private void disableControls() {
