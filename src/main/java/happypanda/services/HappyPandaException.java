@@ -20,6 +20,6 @@ public abstract class HappyPandaException extends RuntimeException {
         super(cause);
     }
 
-    public abstract void handle(Thread thread);
+    public abstract String prettyMessage();
 
 }
