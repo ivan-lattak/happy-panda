@@ -10,10 +10,12 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -25,6 +27,8 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 
 // @SuppressWarnings("NullableProblems")
 public class HappyPandaController {
+
+    private static final Logger logger = LoggerFactory.getLogger(HappyPandaController.class);
 
     private Stage stage;
     public void setStage(Stage stage) {
@@ -42,6 +46,8 @@ public class HappyPandaController {
 
     @FXML @NotNull
     private Button downloadButton;
+    @FXML @NotNull
+    private Button cancelButton;
     @FXML @NotNull
     private Button browseButton;
 
@@ -98,8 +104,9 @@ public class HappyPandaController {
 
     private boolean validateGalleryUrlField() {
         try {
-            new URI(galleryUrlField.getText());
-        } catch (URISyntaxException e) {
+            new URL(galleryUrlField.getText());
+        } catch (MalformedURLException e) {
+            logger.warn("Invalid gallery URL!", e);
             displayError("Invalid gallery URL!", Duration.of(5, SECONDS));
             return false;
         }
@@ -127,6 +134,7 @@ public class HappyPandaController {
         try {
             outputFolder = Paths.get(outputFolderField.getText());
         } catch (InvalidPathException e) {
+            logger.warn("Invalid output folder path!", e);
             displayError("Invalid output folder path!", Duration.of(5, SECONDS));
             return false;
         }
@@ -137,7 +145,7 @@ public class HappyPandaController {
         }
 
         if (!Files.isDirectory(outputFolder)) {
-            displayError("The provided \"output folder\" is not a folder", Duration.of(5, SECONDS));
+            displayError("The provided \"output folder\" is not a folder!", Duration.of(5, SECONDS));
             return false;
         }
         return true;
@@ -180,7 +188,8 @@ public class HappyPandaController {
     }
 
     private Node[] controlNodes() {
-        return new Node[]{ galleryUrlField, ipbMemberIdField, ipbPassHashField, outputFolderField, downloadButton, browseButton };
+        return new Node[]{ galleryUrlField, ipbMemberIdField, ipbPassHashField, outputFolderField,
+                downloadButton, cancelButton, browseButton };
     }
 
 }

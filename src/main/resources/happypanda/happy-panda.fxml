@@ -95,11 +95,16 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-              <Button fx:id="downloadButton" mnemonicParsing="false" onAction="#handleDownload" text="Download" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+              <Button fx:id="downloadButton" defaultButton="true" mnemonicParsing="false" onAction="#handleDownload" text="Download" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                   <font>
                       <Font name="Arial" size="14.0" />
                   </font>
               </Button>
+            <Button fx:id="cancelButton" cancelButton="true" focusTraversable="false" layoutX="219.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" textAlignment="CENTER" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </Button>
             <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="errorText" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" />

@@ -1,6 +1,7 @@
 package happypanda;
 
 import happypanda.controllers.HappyPandaController;
+import happypanda.services.DefaultExceptionHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,8 +10,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static final int ROOT_H_PADDING = 20;
-    public static final int ROOT_V_PADDING = 40;
+    private static final int ROOT_H_PADDING = 20;
+    private static final int ROOT_V_PADDING = 40;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -26,6 +27,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        Thread.setDefaultUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
         launch(args);
     }
 
